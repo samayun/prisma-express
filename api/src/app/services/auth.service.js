@@ -1,5 +1,8 @@
 /* eslint-disable class-methods-use-this */
 const { BCrypt } = require('jwt-auth-helper');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 class AuthService {
   constructor(Model) {
@@ -8,13 +11,13 @@ class AuthService {
 
   async register(params) {
     const { name, email, password } = params;
-    // check is user already exist
+
     const existingUser = await this.Model.findOne({ email });
-    // if user not found show error
+
     if (existingUser) throw new Error('User already exists, please login now 😢');
-    // hash password
+
     const hashedPassword = await BCrypt.makeHash(password);
-    // save on database
+
     const credentials = {
       name,
       email,
@@ -49,7 +52,9 @@ class AuthService {
   }
 
   async getUsers() {
-    return this.Model.find({}).limit(50);
+    const users = await prisma.user.findMany();
+    console.log(users);
+    return users;
   }
 }
 

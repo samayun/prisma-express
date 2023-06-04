@@ -2,7 +2,7 @@ FROM node:lts-slim
 
 ENV NODE_ENV=development
 
-RUN npm install --global npm
+RUN npm install --global npm prisma
 
 USER node
 

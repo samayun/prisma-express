@@ -31,6 +31,8 @@ module.exports = () => {
 
       req.session.user = user;
 
+      req.cookies.user = user;
+
       res.json({
         success: true,
         message: `${user.name} logged in successfully`,
@@ -51,6 +53,8 @@ module.exports = () => {
       const user = await authService.register(req.body);
 
       req.session.user = user;
+
+      req.cookies.user = user;
 
       const accessToken = await jwt.generateJWTToken({ ...user });
 
