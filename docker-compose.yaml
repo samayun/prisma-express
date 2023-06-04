@@ -1,0 +1,55 @@
+version: "3.3"
+
+services:
+  db:
+    image: mongo:4.4.1
+    container_name: prisma-db
+    restart: unless-stopped
+    volumes:
+      - ./volumes/docker-volumes-data/db:/data/db
+    command: --serviceExecutor adaptive
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: prisma
+    ports:
+      - ${DB_PORT:-27017}:27017
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: prisma-db-viewer
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+    ports:
+      - ${DB_ADMIN_PORT:-8081}:8081
+
+  api:
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    restart: always
+    image: prisma-api:dev
+    container_name: prisma-api-dev
+    volumes:
+      - /home/node/app/node_modules
+      - ./api:/home/node/app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      env_file: .env
+    ports:
+      - ${PORT:-5000}:5000
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: nginx
+    container_name: prisma-reverse-proxy
+    restart: unless-stopped
+    environment:
+      LOGSPOUT: ignore
+    ports:
+      - ${NGINX_PORT:-80}:80

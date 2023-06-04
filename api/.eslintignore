@@ -1,0 +1,17 @@
+coverage
+node_modules
+.env
+uploads/**
+public/**
+.vscode
+.eslintcache
+.DS_Store
+.eslintcache
+volumes
+**src/app/swagger/output/swagger_output.json
+**dist
+**.env
+**node_modules
+**npm-debug.log
+**.vscode
+**.husky
