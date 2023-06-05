@@ -1,5 +1,4 @@
 /* eslint-disable no-console  */
-
 require('dotenv').config();
 const express = require('express');
 
@@ -50,7 +49,7 @@ async function main() {
 
 main()
   .then(async () => {
-    console.log('HOICHE CONNECT');
+    console.log('DB CONNECTED');
   })
   .catch(async e => {
     console.error(e);

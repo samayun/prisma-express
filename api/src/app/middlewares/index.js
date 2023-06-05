@@ -2,7 +2,6 @@ const cors = require('cors');
 const express = require('express');
 const config = require('../../config');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 
 const middlewares = [
@@ -16,7 +15,6 @@ const middlewares = [
   }),
 
   session({
-    store: MongoStore.create({ mongoUrl: config.db.url }),
     secret: config.auth.jwtSecret,
     resave: true,
     saveUninitialized: true,

@@ -7,7 +7,7 @@ async function connectDB() {
   try {
     if (process.env.NODE_ENV === 'development') {
       // eslint-disable-next-line no-console
-      console.log(`🧠 Connecting to ${config.db.url}`);
+      console.log(`🧠 Connecting to ${config.db.url}`);      
     }
 
     return Promise.resolve(`Database Connected`);

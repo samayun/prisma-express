@@ -1,21 +1,18 @@
 const config = require('../../../config');
-
 const { JWT } = require('jwt-auth-helper');
-const router = require('express').Router();
+
 const { AuthService } = require('../../../app/services/auth.service');
 
 const authenticate = require('../../../app/middlewares/isAuth');
 const { registerValidator, loginValidator } = require('../auth.validator');
 
-const UserModel = require('../../../database/models/User.model');
-
 const jwt = new JWT(config.auth.jwtSecret);
 
-const authService = new AuthService(UserModel);
-
-const path = '/v1/auth';
-
 module.exports = () => {
+  const path = '/v1/auth';
+  const router = require('express').Router();
+  const authService = new AuthService();
+
   router.post('/login', loginValidator, async (req, res, next) => {
     /* 
       #swagger.tags = ['Authentication']
@@ -29,9 +26,9 @@ module.exports = () => {
 
       const accessToken = await jwt.generateJWTToken({ ...user });
 
-      req.session.user = user;
+      req.session['accessToken'] = accessToken;
 
-      req.cookies.user = user;
+      req.cookies['accessToken'] = accessToken;
 
       res.json({
         success: true,
@@ -52,11 +49,11 @@ module.exports = () => {
     try {
       const user = await authService.register(req.body);
 
-      req.session.user = user;
-
-      req.cookies.user = user;
-
       const accessToken = await jwt.generateJWTToken({ ...user });
+
+      req.session['accessToken'] = accessToken;
+
+      req.cookies['accessToken'] = accessToken;
 
       res.json({ success: true, message: `${user.name} register successfully`, data: accessToken });
     } catch (error) {

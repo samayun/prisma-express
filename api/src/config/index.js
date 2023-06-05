@@ -11,7 +11,7 @@ const config = {
     swaggerRoutePrefix: process.env.swaggerRoutePrefix || '/docs',
   },
   db: {
-    url: process.env.DATABASE_URL || 'mongodb://admin:password@db:27017/admin',
+    url: process.env.DATABASE_URL || 'postgres://admin:password@db:5432/prisma-db',
     admin: process.env.DB_ADMIN_PORT || 8081,
   },
   auth: {

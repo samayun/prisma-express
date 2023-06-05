@@ -60,7 +60,7 @@ class AuthService {
   }
 
   async updateUser(userId, data) {
-    const updatedUser = await req.prisma.post.update({
+    const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: data,
     });

@@ -12,9 +12,9 @@ module.exports = () => {
 
       // If only modules have routes_directory/index.js means it's RESTful route
       // otherwise It may be utilities module or GraphQL based modules
-      console.log({ routePath: `${routePath}/routes/index.js` });
 
       if (fs.existsSync(`${routePath}/routes/index.js`)) {
+        console.log({ routePath: `${routePath}/routes/index.js` });
         routes.push(`${routePath}/routes/index.js`);
         return require(`${routePath}/routes/index`)();
       }

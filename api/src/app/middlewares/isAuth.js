@@ -7,9 +7,9 @@ const authenticate = async (req, res, next) => {
   try {
     const token = req.headers?.authorization?.replace('Bearer ', '');
 
-    console.log({ user: req.session.user });
+    console.log({ accessToken: req.cockie.accessToken });
 
-    if (req.session.user) return next();
+    if (req.session.accessToken) return next();
 
     if (!token || token === null || token === '') {
       req.isAuth = false;

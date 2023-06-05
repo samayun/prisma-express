@@ -1,10 +1,9 @@
 const { TestService } = require('../tests.service');
-const TestModel = require('../../../database/models/Test.model');
 
 module.exports = () => {
   const path = '/v1/tests';
   const router = require('express').Router();
-  const testService = new TestService(TestModel);
+  const testService = new TestService();
 
   router.get('/', async (req, res, next) => {
     try {
