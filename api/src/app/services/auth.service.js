@@ -1,40 +1,33 @@
 /* eslint-disable class-methods-use-this */
 const { BCrypt } = require('jwt-auth-helper');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const { prisma } = require('../../database/connection');
 
 class AuthService {
-  constructor(Model) {
-    this.Model = Model;
-  }
-
   async register(params) {
     const { name, email, password } = params;
 
-    const existingUser = await this.Model.findOne({ email });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) throw new Error('User already exists, please login now 😢');
 
     const hashedPassword = await BCrypt.makeHash(password);
 
-    const credentials = {
+    const data = {
       name,
       email,
       password: hashedPassword,
+      role: 'USER',
     };
 
-    const user = await this.Model.create(credentials);
+    const user = await prisma.user.create({ data });
 
     delete user.password;
 
-    return user.toObject();
+    return user;
   }
 
   async login({ email, password }) {
-    const existingUser = await this.Model.findOne({ email });
-
-    const user = existingUser?.toObject();
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) throw new Error('There has no found user with this credential 😢');
 
@@ -47,14 +40,37 @@ class AuthService {
     return user;
   }
 
-  async profile(email) {
-    return this.Model.findOne({ email });
+  async profile(userId) {
+    return prisma.user.findUnique({ where: { id: userId } });
   }
 
   async getUsers() {
-    const users = await prisma.user.findMany();
-    console.log(users);
-    return users;
+    try {
+      const users = await prisma.user.findMany();
+      // const users = await this.Model.find();
+
+      return users;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async userByEmail(userId) {
+    return prisma.user.findFirst({ where: { id: userId } });
+  }
+
+  async updateUser(userId, data) {
+    const updatedUser = await req.prisma.post.update({
+      where: { id: userId },
+      data: data,
+    });
+    return updatedUser;
+  }
+
+  async deleteUser(userId) {
+    const deleteUser = await prisma.user.delete({ where: { id: userId } });
+
+    return deleteUser;
   }
 }
 

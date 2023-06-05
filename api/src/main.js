@@ -6,7 +6,7 @@ const express = require('express');
 const app = express();
 const config = require('./config');
 
-const connectDB = require('./database/connection');
+const { prisma, connectDB } = require('./database/connection');
 
 const loadMiddlewares = require('./app/middlewares');
 
@@ -21,26 +21,39 @@ async function main() {
     loadDynamicRoutes(app);
 
     await app.listen(config.server.port);
-    console.clear();
+
     console.log(
-      '\x1b[47m\x1b[46m%s\x1b[0m',
+      '\x1b[42m\x1b[40m%s\x1b[0m',
       `🧠 Server running on 👀`,
-      '\x1b[1m\x1b[5m',
+      // '\x1b[1m\x1b[5m',
       `http://${config.server.host.replace('http://', '')}`,
     );
     console.log(
-      '\x1b[46m\x1b[46m%s\x1b[2m',
-      `🧠 Swagger documentation is here  👀`,
-      '\x1b[1m\x1b[5m',
+      '\x1b[42m\x1b[38m%s\x1b[0m',
+      `🟢 Swagger documentation is here  👀`,
       `http://${config.server.host.replace('http://', '')}/docs`,
     );
 
     if (process.env.NODE_ENV == 'development') {
-      console.log(`>> DB ADMIN  👀`, '\x1b[1m\x1b[5m', `http://localhost:${config.db.admin}`);
+      console.log(
+        '\x1b[42m\x1b[43m%s\x1b[0m',
+        `⭐️ DB ADMIN  👀`,
+        `http://localhost:${config.db.admin}`,
+      );
     }
   } catch (error) {
     console.log(error.message || 'Server Down');
+  } finally {
+    return null;
   }
 }
 
-main();
+main()
+  .then(async () => {
+    console.log('HOICHE CONNECT');
+  })
+  .catch(async e => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
