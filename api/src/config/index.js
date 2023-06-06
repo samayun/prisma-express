@@ -17,6 +17,24 @@ const config = {
   auth: {
     jwtSecret: process.env.JWT_SECRET_KEY || 'JWT_SECRET_KEY',
   },
+
+  cors: {
+    origin: process.env.UI?.split(',') || '*',
+  },
+
+  cookie: {
+    options: {
+      httpOnly: true,
+      domain: process.env.HOST || '',
+      secure: true,
+      sameSite:
+        process.env.NODE_ENV === 'production'
+          ? 'strict'
+          : process.env.NODE_ENV === 'staging'
+          ? 'lax'
+          : 'none',
+    },
+  },
 };
 
 module.exports = config;

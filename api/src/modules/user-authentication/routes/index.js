@@ -19,16 +19,13 @@ module.exports = () => {
       #swagger.description = 'Sign in a specific user'
      */
     try {
-      const user = await authService.login({
-        email: req.body.email,
-        password: req.body.password,
-      });
+      const user = await authService.login({ email: req.body.email, password: req.body.password });
 
       const accessToken = await jwt.generateJWTToken({ ...user });
 
-      req.session['accessToken'] = accessToken;
+      // req.session['accessToken'] = accessToken;
 
-      req.cookies['accessToken'] = accessToken;
+      res.cookie('accessToken', accessToken);
 
       res.json({
         success: true,
@@ -53,7 +50,7 @@ module.exports = () => {
 
       req.session['accessToken'] = accessToken;
 
-      req.cookies['accessToken'] = accessToken;
+      res.cookie('accessToken', accessToken, config.cookie.options);
 
       res.json({ success: true, message: `${user.name} register successfully`, data: accessToken });
     } catch (error) {
@@ -62,7 +59,8 @@ module.exports = () => {
   });
 
   router.get('/profile', authenticate, async (req, res, next) => {
-    // #swagger.tags = ['Authentication']
+    /* 	#swagger.tags = ['Authentication']
+      	#swagger.security.bearerAuth = []*/
     try {
       const data = await authService.profile(req.session.user.email);
 

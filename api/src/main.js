@@ -7,7 +7,7 @@ const config = require('./config');
 
 const { prisma, connectDB } = require('./database/connection');
 
-const loadMiddlewares = require('./app/middlewares');
+const loadMiddlewares = require('./loaders/global.middlewares');
 
 const loadDynamicRoutes = require('./routes');
 
