@@ -12,7 +12,8 @@
     "swagger": "cd src && node swagger.js",
     "lint": "eslint --ext .js --cache --fix --ignore-path ../.gitignore .",
     "format": "prettier --write \"./**/*.js\"",
-    "test": "echo '✅ Testing Success'"
+    "test": "echo '✅ Testing Success'",
+    "seed": "node prisma/seed.js"
   },
   "keywords": [
     "nodejs-framework",
